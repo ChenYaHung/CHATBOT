@@ -16,6 +16,7 @@ import time
 import datetime
 import random
 import nest_asyncio
+import openai
 nest_asyncio.apply()
 
 intents = discord.Intents.all() # intents是要求機器人的權限
@@ -63,6 +64,18 @@ async def on_member_remove(member): #有人離開伺服器
     channel = bot.get_channel(1164849918863745135)
     await channel.send(f'{member} leave!')  
 
+openai.api_key='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'
+@bot.tree.command(name="ask",description="ask")
+async def ask(interaction:discord.Interaction,問題:str):
+    response=openai.Completion.create(
+        model="text-davinci-003",
+        prompt=問題,
+        max_tokens=3000,
+        temperature=0.7
+    )
+    output=response["choices"][0]["text"]    
+    await interaction.response.send_message(output)
+    
 @bot.tree.command(name="lottery",description="抽運勢")
 async def lottery(interaction:discord.Interaction):
   result = ''
